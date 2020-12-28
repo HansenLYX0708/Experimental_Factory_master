@@ -13,7 +13,7 @@ AUTOTUNE = tf.data.experimental.AUTOTUNE
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("--logdir", default="logs")
-    parser.add_argument("--image-size", default=32, type=int)
+    parser.add_argument("--image-size", default=28, type=int)
     parser.add_argument("--patch-size", default=4, type=int)
     parser.add_argument("--num-layers", default=4, type=int)
     parser.add_argument("--d-model", default=64, type=int)
@@ -25,7 +25,7 @@ if __name__ == "__main__":
     parser.add_argument("--epochs", default=300, type=int)
     args = parser.parse_args()
 
-    ds = tfds.load("imagenet_resized/32x32", as_supervised=True)
+    ds = tfds.load("mnist", as_supervised=True)
     ds_train = (
         ds["train"]
         .cache()
@@ -34,7 +34,7 @@ if __name__ == "__main__":
         .prefetch(AUTOTUNE)
     )
     ds_test = (
-        ds["validation"]
+        ds["test"]
         .cache()
         .batch(args.batch_size)
         .prefetch(AUTOTUNE)
@@ -47,11 +47,11 @@ if __name__ == "__main__":
             image_size=args.image_size,
             patch_size=args.patch_size,
             num_layers=args.num_layers,
-            num_classes=1000,
+            num_classes=10,
             d_model=args.d_model,
             num_heads=args.num_heads,
             mlp_dim=args.mlp_dim,
-            channels=3,
+            channels=1,
             dropout=0.1,
         )
         model.compile(
