@@ -183,4 +183,4 @@ if __name__ == '__main__':
     input_tmp = tf.random.uniform((2, 32, 32, 3), 0, 255, dtype=tf.int32)
     logits = model(input_tmp)
 
-    print(logits)
+    print("result:",logits)
