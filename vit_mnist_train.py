@@ -6,11 +6,11 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 
-batch_size = 256
+batch_size = 4096
 training = True
 load_weight = True
 epochs = 10
-weights_path = "weights\\model_weights.h5"
+weights_path = "model_weights.h5"
 
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 x_train, x_test = x_train.astype(np.float32)/255., x_test.astype(np.float32)/255.

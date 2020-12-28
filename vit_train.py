@@ -40,6 +40,10 @@ if __name__ == "__main__":
         .prefetch(AUTOTUNE)
     )
 
+    for step, (x, y) in enumerate(ds_train):
+        break;
+
+
     strategy = tf.distribute.MirroredStrategy()
 
     with strategy.scope():
