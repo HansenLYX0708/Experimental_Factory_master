@@ -1,5 +1,6 @@
 import tensorflow as tf
 from    tensorflow import keras
+import numpy as np
 
 def smooth_l1_loss(y_true, y_pred):
     '''Implements Smooth-L1 loss.
@@ -145,3 +146,169 @@ def rcnn_bbox_loss(target_deltas_list, target_matchs_list, rcnn_deltas_list):
     loss = tf.reduce_mean(loss) if tf.size(loss) > 0 else tf.constant(0.0)
 
     return loss
+
+
+
+def bboxes_iou(boxes1,boxes2):
+    '''
+    cal IOU of two boxes or batch boxes
+    such as: (1)
+            boxes1 = np.asarray([[0,0,5,5],[0,0,10,10],[0,0,10,10]])
+            boxes2 = np.asarray([[0,0,5,5]])
+            and res is [1.   0.25 0.25]
+            (2)
+            boxes1 = np.asarray([[0,0,5,5],[0,0,10,10],[0,0,10,10]])
+            boxes2 = np.asarray([[0,0,5,5],[0,0,10,10],[0,0,10,10]])
+            and res is [1. 1. 1.]
+    :param boxes1:[xmin,ymin,xmax,ymax] or
+                [[xmin,ymin,xmax,ymax],[xmin,ymin,xmax,ymax],...]
+    :param boxes2:[xmin,ymin,xmax,ymax]
+    :return:
+    '''
+
+    #cal the box's area of boxes1 and boxess
+    boxes1Area = (boxes1[...,2]-boxes1[...,0])*(boxes1[...,3]-boxes1[...,1])
+    boxes2Area = (boxes2[..., 2] - boxes2[..., 0]) * (boxes2[..., 3] - boxes2[..., 1])
+
+    #cal Intersection
+    left_up = np.maximum(boxes1[...,:2],boxes2[...,:2])
+    right_down = np.minimum(boxes1[...,2:],boxes2[...,2:])
+
+    inter_section = np.maximum(right_down-left_up,0.0)
+    inter_area = inter_section[...,0] * inter_section[...,1]
+    union_area = boxes1Area+boxes2Area-inter_area
+    ious = np.maximum(1.0*inter_area/union_area,np.finfo(np.float32).eps)
+
+    return ious
+
+def bboxes_giou(boxes1,boxes2):
+    '''
+    cal GIOU of two boxes or batch boxes
+    such as: (1)
+            boxes1 = np.asarray([[0,0,5,5],[0,0,10,10],[15,15,25,25]])
+            boxes2 = np.asarray([[5,5,10,10]])
+            and res is [-0.49999988  0.25       -0.68749988]
+            (2)
+            boxes1 = np.asarray([[0,0,5,5],[0,0,10,10],[0,0,10,10]])
+            boxes2 = np.asarray([[0,0,5,5],[0,0,10,10],[0,0,10,10]])
+            and res is [1. 1. 1.]
+    :param boxes1:[xmin,ymin,xmax,ymax] or
+                [[xmin,ymin,xmax,ymax],[xmin,ymin,xmax,ymax],...]
+    :param boxes2:[xmin,ymin,xmax,ymax]
+    :return:
+    '''
+
+    # cal the box's area of boxes1 and boxess
+    boxes1Area = (boxes1[...,2]-boxes1[...,0])*(boxes1[...,3]-boxes1[...,1])
+    boxes2Area = (boxes2[..., 2] - boxes2[..., 0]) * (boxes2[..., 3] - boxes2[..., 1])
+
+    # ===========cal IOU=============#
+    #cal Intersection
+    left_up = np.maximum(boxes1[...,:2],boxes2[...,:2])
+    right_down = np.minimum(boxes1[...,2:],boxes2[...,2:])
+
+    inter_section = np.maximum(right_down-left_up,0.0)
+    inter_area = inter_section[...,0] * inter_section[...,1]
+    union_area = boxes1Area+boxes2Area-inter_area
+    ious = np.maximum(1.0*inter_area/union_area,np.finfo(np.float32).eps)
+
+    # ===========cal enclose area for GIOU=============#
+    enclose_left_up = np.minimum(boxes1[..., :2], boxes2[..., :2])
+    enclose_right_down = np.maximum(boxes1[..., 2:], boxes2[..., 2:])
+    enclose = np.maximum(enclose_right_down - enclose_left_up, 0.0)
+    enclose_area = enclose[..., 0] * enclose[..., 1]
+
+    # cal GIOU
+    gious = ious - 1.0 * (enclose_area - union_area) / enclose_area
+
+    return gious
+
+def bboxes_diou(boxes1,boxes2):
+    '''
+    cal DIOU of two boxes or batch boxes
+    :param boxes1:[xmin,ymin,xmax,ymax] or
+                [[xmin,ymin,xmax,ymax],[xmin,ymin,xmax,ymax],...]
+    :param boxes2:[xmin,ymin,xmax,ymax]
+    :return:
+    '''
+
+    #cal the box's area of boxes1 and boxess
+    boxes1Area = (boxes1[...,2]-boxes1[...,0])*(boxes1[...,3]-boxes1[...,1])
+    boxes2Area = (boxes2[..., 2] - boxes2[..., 0]) * (boxes2[..., 3] - boxes2[..., 1])
+
+    #cal Intersection
+    left_up = np.maximum(boxes1[...,:2],boxes2[...,:2])
+    right_down = np.minimum(boxes1[...,2:],boxes2[...,2:])
+
+    inter_section = np.maximum(right_down-left_up,0.0)
+    inter_area = inter_section[...,0] * inter_section[...,1]
+    union_area = boxes1Area+boxes2Area-inter_area
+    ious = np.maximum(1.0*inter_area/union_area,np.finfo(np.float32).eps)
+
+    #cal outer boxes
+    outer_left_up = np.minimum(boxes1[..., :2], boxes2[..., :2])
+    outer_right_down = np.maximum(boxes1[..., 2:], boxes2[..., 2:])
+    outer = np.maximum(outer_right_down - outer_left_up, 0.0)
+    outer_diagonal_line = np.square(outer[...,0]) + np.square(outer[...,1])
+
+    #cal center distance
+    boxes1_center = (boxes1[..., :2] +  boxes1[...,2:]) * 0.5
+    boxes2_center = (boxes2[..., :2] +  boxes2[...,2:]) * 0.5
+    center_dis = np.square(boxes1_center[...,0]-boxes2_center[...,0]) +\
+                 np.square(boxes1_center[...,1]-boxes2_center[...,1])
+
+    #cal diou
+    dious = ious - center_dis / outer_diagonal_line
+
+    return dious
+
+def bboxes_ciou(boxes1,boxes2):
+    '''
+    cal CIOU of two boxes or batch boxes
+    :param boxes1:[xmin,ymin,xmax,ymax] or
+                [[xmin,ymin,xmax,ymax],[xmin,ymin,xmax,ymax],...]
+    :param boxes2:[xmin,ymin,xmax,ymax]
+    :return:
+    '''
+
+    #cal the box's area of boxes1 and boxess
+    boxes1Area = (boxes1[...,2]-boxes1[...,0])*(boxes1[...,3]-boxes1[...,1])
+    boxes2Area = (boxes2[..., 2] - boxes2[..., 0]) * (boxes2[..., 3] - boxes2[..., 1])
+
+    # cal Intersection
+    left_up = np.maximum(boxes1[...,:2],boxes2[...,:2])
+    right_down = np.minimum(boxes1[...,2:],boxes2[...,2:])
+
+    inter_section = np.maximum(right_down-left_up,0.0)
+    inter_area = inter_section[...,0] * inter_section[...,1]
+    union_area = boxes1Area+boxes2Area-inter_area
+    ious = np.maximum(1.0*inter_area/union_area,np.finfo(np.float32).eps)
+
+    # cal outer boxes
+    outer_left_up = np.minimum(boxes1[..., :2], boxes2[..., :2])
+    outer_right_down = np.maximum(boxes1[..., 2:], boxes2[..., 2:])
+    outer = np.maximum(outer_right_down - outer_left_up, 0.0)
+    outer_diagonal_line = np.square(outer[...,0]) + np.square(outer[...,1])
+
+    # cal center distance
+    boxes1_center = (boxes1[..., :2] +  boxes1[...,2:]) * 0.5
+    boxes2_center = (boxes2[..., :2] +  boxes2[...,2:]) * 0.5
+    center_dis = np.square(boxes1_center[...,0]-boxes2_center[...,0]) +\
+                 np.square(boxes1_center[...,1]-boxes2_center[...,1])
+
+    # cal penalty term
+    # cal width,height
+    boxes1_size = np.maximum(boxes1[...,2:]-boxes1[...,:2],0.0)
+    boxes2_size = np.maximum(boxes2[..., 2:] - boxes2[..., :2], 0.0)
+    v = (4.0/np.square(np.pi)) * np.square((
+            np.arctan((boxes1_size[...,0]/boxes1_size[...,1])) -
+            np.arctan((boxes2_size[..., 0] / boxes2_size[..., 1])) ))
+    alpha = v / (1-ious+v)
+
+
+    #cal ciou
+    cious = ious - (center_dis / outer_diagonal_line + alpha*v)
+
+    return cious
+
+
