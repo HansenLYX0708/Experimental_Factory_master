@@ -1,12 +1,15 @@
-from classification.models.backbone.Inception import Inception
-from classification.datasets.sn_data import load_data
-from classification.models.callback import keras_callback
 import numpy as np
 import tensorflow as tf
 import os
 from tensorflow import keras
+import matplotlib.pyplot as plt
+
+from classification.models.backbone.Inception import Inception
+from classification.datasets.sn_data import load_data
+from classification.models.callback import keras_callback
 from tensorflow.python.framework import graph_util
 from classification.utils.tf_2_pb_to_frozen_graph import save_tf_2_frozen_graph, load_frozen_model_inference
+
 
 tf.random.set_seed(22)
 np.random.seed(22)
@@ -21,7 +24,7 @@ weights_path = "weights\\model_weights.h5"
 frozen_folder = "C:\\_work\\__project\\PyCharm_project\\Experimental_Factory_master\\frozen_models"
 frozen_name = "frozen_model.pb"
 training = True
-load_weight = True
+load_weight = False
 batch_size = 256
 epochs = 10
 input_shape = (None, 40, 24, 1)
@@ -30,12 +33,13 @@ input_shape = (None, 40, 24, 1)
 (x_train, y_train), (x_test, y_test) = load_data()
 x_train, x_test = x_train.astype(np.float32)/255., x_test.astype(np.float32)/255.
 x_train, x_test = np.expand_dims(x_train, axis=3), np.expand_dims(x_test, axis=3)
-
-db_train = tf.data.Dataset.from_tensor_slices((x_train, y_train)).shuffle(buffer_size=14784).batch(batch_size)
-db_test = tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(batch_size)
+AUTOTUNE = tf.data.experimental.AUTOTUNE
+db_train = tf.data.Dataset.from_tensor_slices((x_train, y_train)).shuffle(buffer_size=14784).batch(batch_size).prefetch(AUTOTUNE)
+db_test = tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(batch_size).prefetch(AUTOTUNE)
 
 print(x_train.shape, y_train.shape)
 print(x_test.shape, y_test.shape)
+
 
 # build model and optimizer
 
@@ -55,6 +59,8 @@ acc_meter_test = keras.metrics.Accuracy()
 #callback = keras_callback.callback_setting(log_base_path, model_output, True)
 
 acc_record = 0
+loss_list = []
+acc_list = []
 
 for epoch in range(1, epochs + 1):
     acc_meter_train.reset_states()
@@ -75,6 +81,8 @@ for epoch in range(1, epochs + 1):
 
             if step % 10 == 0:
                 print(epoch, step, 'loss:', loss.numpy(), 'acc:', acc_meter_train.result().numpy())
+                loss_list.append(loss.numpy())
+                acc_list.append(acc_meter_train.result().numpy())
                 acc_meter_train.reset_states()
 
     acc_meter_test.reset_states()
@@ -90,7 +98,17 @@ for epoch in range(1, epochs + 1):
     # save best model
     if acc_meter_test.result().numpy() > acc_record:
         print("save current model weight")
-        model.save_weights(weights_path)
+        #model.save_weights(weights_path)
+
+
+# show acc and loss
+acc_list = np.array(acc_list)
+loss_list = np.array(loss_list)
+
+plt.figure()
+plt.plot(acc_list)
+#plt.plot(loss_list)
+plt.show()
 
 # at last, save most better frozen model
 print("save best model frozen model")
