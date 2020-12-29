@@ -1,18 +1,20 @@
 from classification.models.backbone import Inception
 from classification.models.classifiers.ViT import VisionTransformer
 import tensorflow_addons as tfa
+from classification.datasets.sn_data import load_data
 
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 
-batch_size = 4096
+batch_size = 256
 training = True
 load_weight = True
 epochs = 10
 weights_path = "model_weights.h5"
+num_classes = 16
 
-(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+(x_train, y_train), (x_test, y_test) = load_data()
 x_train, x_test = x_train.astype(np.float32)/255., x_test.astype(np.float32)/255.
 x_train, x_test = np.expand_dims(x_train, axis=3), np.expand_dims(x_test, axis=3)
 
@@ -26,7 +28,7 @@ model = VisionTransformer(
         image_size=28,
         patch_size=4,
         num_layers=4,
-        num_classes=10,
+        num_classes=num_classes,
         d_model=64,
         num_heads=4,
         mlp_dim=128,
@@ -35,7 +37,7 @@ model = VisionTransformer(
     )
 
 #model = Inception.Inception(2, 10)
-model.build(input_shape=(None, 28, 28, 1))
+model.build(input_shape=(None, 40, 24, 1))
 model.summary()
 
 #optimizer = keras.optimizers.Adam(learning_rate=1e-3)
@@ -56,7 +58,7 @@ for epoch in range(1, epochs + 1):
     acc_meter_train.reset_states()
     if training :
         for step, (x, y) in enumerate(db_train):
-            y_one_hot = tf.one_hot(y, depth=10)
+            y_one_hot = tf.one_hot(y, depth=num_classes)
             with tf.GradientTape() as tape:
                 # print(x.shape, y.shape)
                 # [b, 10]
