@@ -265,6 +265,7 @@ def bboxes_diou(boxes1,boxes2):
 def bboxes_ciou(boxes1,boxes2):
     '''
     cal CIOU of two boxes or batch boxes
+    the result is nan if calculate two same box
     :param boxes1:[xmin,ymin,xmax,ymax] or
                 [[xmin,ymin,xmax,ymax],[xmin,ymin,xmax,ymax],...]
     :param boxes2:[xmin,ymin,xmax,ymax]

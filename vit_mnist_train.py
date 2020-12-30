@@ -15,17 +15,17 @@ weights_path = "model_weights.h5"
 num_classes = 16
 
 (x_train, y_train), (x_test, y_test) = load_data()
-x_train, x_test = x_train.astype(np.float32)/255., x_test.astype(np.float32)/255.
+#x_train, x_test = x_train.astype(np.float32)/255., x_test.astype(np.float32)/255.
 x_train, x_test = np.expand_dims(x_train, axis=3), np.expand_dims(x_test, axis=3)
-
-db_train = tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(batch_size)
+y_train, y_test = y_train.astype(np.float32), y_test.astype(np.float32)
+db_train = tf.data.Dataset.from_tensor_slices((x_train, y_train)).shuffle(14784).batch(batch_size)
 db_test = tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(batch_size)
 
 print(x_train.shape, y_train.shape)
 print(x_test.shape, y_test.shape)
 
 model = VisionTransformer(
-        image_size=28,
+        image_size=(40, 24),
         patch_size=4,
         num_layers=4,
         num_classes=num_classes,
@@ -44,7 +44,7 @@ model.summary()
 optimizer = tfa.optimizers.AdamW(
         learning_rate=3e-4, weight_decay=1e-4
         )
-criteon = keras.losses.CategoricalCrossentropy(from_logits=True)
+criteon = keras.losses.SparseCategoricalCrossentropy(from_logits=True)
 acc_meter_train = keras.metrics.Accuracy()
 acc_meter_test = keras.metrics.Accuracy()
 
@@ -52,13 +52,11 @@ acc_meter_test = keras.metrics.Accuracy()
 
 acc_record = 0
 
-
-model.summary()
 for epoch in range(1, epochs + 1):
     acc_meter_train.reset_states()
     if training :
         for step, (x, y) in enumerate(db_train):
-            y_one_hot = tf.one_hot(y, depth=num_classes)
+            #y_one_hot = tf.one_hot(y, depth=num_classes)
             with tf.GradientTape() as tape:
                 # print(x.shape, y.shape)
                 # [b, 10]
@@ -66,7 +64,7 @@ for epoch in range(1, epochs + 1):
                 pred_train = tf.argmax(logits, axis=1)
                 acc_meter_train.update_state(y, pred_train)
                 # [b] vs [b, 10]
-                loss = criteon(y_one_hot, logits)
+                loss = criteon(y, logits)
 
             grads = tape.gradient(loss, model.trainable_variables)
             optimizer.apply_gradients(zip(grads, model.trainable_variables))

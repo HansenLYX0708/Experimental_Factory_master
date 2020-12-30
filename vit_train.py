@@ -5,6 +5,8 @@ import tensorflow as tf
 import tensorflow_addons as tfa
 import tensorflow_datasets as tfds
 from tensorflow.keras.callbacks import TensorBoard
+from tensorflow import keras
+import numpy as np
 
 from classification.models.classifiers.ViT import VisionTransformer
 
@@ -21,7 +23,7 @@ if __name__ == "__main__":
     parser.add_argument("--mlp-dim", default=128, type=int)
     parser.add_argument("--lr", default=3e-4, type=float)
     parser.add_argument("--weight-decay", default=1e-4, type=float)
-    parser.add_argument("--batch-size", default=4096, type=int)
+    parser.add_argument("--batch-size", default=256, type=int)
     parser.add_argument("--epochs", default=300, type=int)
     args = parser.parse_args()
 
@@ -31,18 +33,32 @@ if __name__ == "__main__":
         .cache()
         .shuffle(5 * args.batch_size)
         .batch(args.batch_size)
-        .prefetch(AUTOTUNE)
+        #.prefetch(AUTOTUNE)
     )
     ds_test = (
         ds["test"]
         .cache()
         .batch(args.batch_size)
-        .prefetch(AUTOTUNE)
+        #.prefetch(AUTOTUNE)
     )
+
+
+
+    (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
+    x_train, x_test = x_train.astype(np.float32) / 255., x_test.astype(np.float32) / 255.
+    x_train, x_test = np.expand_dims(x_train, axis=3), np.expand_dims(x_test, axis=3)
+    y_train, y_test = y_train.astype(np.float32), y_test.astype(np.float32)
+    db_train = tf.data.Dataset.from_tensor_slices((x_train, y_train)).shuffle(5 * args.batch_size).batch(256)
+    db_test = tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(256)
+
+    print(x_train.shape, y_train.shape)
+    print(x_test.shape, y_test.shape)
 
     for step, (x, y) in enumerate(ds_train):
         break;
 
+    for step, (x, y) in enumerate(db_train):
+        break;
 
     strategy = tf.distribute.MirroredStrategy()
 
