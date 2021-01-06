@@ -4,7 +4,9 @@ from tensorflow import keras
 def conv3x3(channels, stride=1, kernel=(3, 3)):
     return keras.layers.Conv2D(channels, kernel, strides=stride, padding='same',
                                use_bias=False,
-                            kernel_initializer=tf.random_normal_initializer())
+                            kernel_initializer=tf.random_normal_initializer(),
+                               kernel_regularizer=tf.keras.regularizers.l2
+                               )
 
 class ResnetBlock(keras.Model):
 
@@ -43,6 +45,14 @@ class ResnetBlock(keras.Model):
 
         x = x + residual
         return x
+
+    def get_config(self):
+        config = super().get_config().copy()
+        config.update({
+            'channels': self.channels,
+            'strides': self.strides,
+            'residual_path': self.residual_path,
+        })
 
 class ResNet(keras.Model):
 
@@ -93,5 +103,14 @@ class ResNet(keras.Model):
         out = self.avg_pool(out)
         out = self.fc(out)
 
-
         return out
+
+    def get_config(self):
+        config = super().get_config().copy()
+        config.update({
+            'num_blocks': self.num_blocks,
+            'block_list': self.block_list,
+            'in_channels': self.in_channels,
+            'out_channels': self.out_channels,
+
+        })

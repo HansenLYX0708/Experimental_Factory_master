@@ -87,7 +87,7 @@ def test1():
     output_img = random_distort(input_img)
 
     cv2.imwrite(output_path, output_img)
-
+#C:\data\SliderSN\B
 def augmentation_all_cat():
     augmentation_imgs("D:/_work/_data/SliderSN/0", 3)
     augmentation_imgs("D:/_work/_data/SliderSN/2", 1)
@@ -100,11 +100,13 @@ def augmentation_all_cat():
     augmentation_imgs("D:/_work/_data/SliderSN/9", 2)
     augmentation_imgs("D:/_work/_data/SliderSN/A", 1)
     augmentation_imgs("D:/_work/_data/SliderSN/B", 27)
-    augmentation_imgs("D:/_work/_data/SliderSN/C", 36)
+    augmentation_imgs("C:/data/SliderSN/C", 2)
     augmentation_imgs("D:/_work/_data/SliderSN/D", 13)
     augmentation_imgs("D:/_work/_data/SliderSN/E", 2)
     augmentation_imgs("D:/_work/_data/SliderSN/F", 15)
     augmentation_imgs("D:/_work/_data/SliderSN/L", 6)
+
+
 
 def augmentation_all_cat_spesicial():
     augmentation_imgs_spesial("C:/data/SliderSN/0", "C:/data/SliderSN_test/0", 1)
@@ -128,6 +130,6 @@ def augmentation_all_cat_spesicial():
 if __name__ == '__main__':
     #augmentation_all_cat()
     #augmentation_all_cat_spesicial()
-    augmentation_imgs("C:/data/SliderSN/A", 14)
+    augmentation_imgs("C:/data/SliderSN/0", 4)
 
 

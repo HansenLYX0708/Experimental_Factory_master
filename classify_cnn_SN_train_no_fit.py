@@ -3,8 +3,10 @@ import tensorflow as tf
 import os
 from tensorflow import keras
 import matplotlib.pyplot as plt
+import tensorflow_addons as tfa
 
 from classification.models.backbone.Inception import Inception
+from classification.models.backbone.ResNet import ResNet
 from classification.datasets.sn_data import load_data
 from classification.models.callback import keras_callback
 from tensorflow.python.framework import graph_util
@@ -26,7 +28,7 @@ frozen_name = "frozen_model.pb"
 training = True
 load_weight = False
 batch_size = 256
-epochs = 10
+epochs = 50
 input_shape = (None, 40, 24, 1)
 
 
@@ -43,7 +45,8 @@ print(x_test.shape, y_test.shape)
 
 # build model and optimizer
 
-model = Inception(2, 16)
+#model = Inception(2, 16)
+model = ResNet([2, 2, 2], 16)
 model.build(input_shape=(None, 40, 24, 1))
 model.summary()
 
@@ -51,7 +54,10 @@ model.summary()
 if load_weight:
     model.load_weights(load_weights_path)
 
-optimizer = keras.optimizers.Adam(learning_rate=1e-3)
+#optimizer = keras.optimizers.Adam(learning_rate=1e-3)
+optimizer = tfa.optimizers.AdamW(
+        learning_rate=3e-4, weight_decay=1e-4
+        )
 criteon = keras.losses.CategoricalCrossentropy(from_logits=True)
 acc_meter_train = keras.metrics.Accuracy()
 acc_meter_test = keras.metrics.Accuracy()
@@ -98,7 +104,7 @@ for epoch in range(1, epochs + 1):
     # save best model
     if acc_meter_test.result().numpy() > acc_record:
         print("save current model weight")
-        #model.save_weights(weights_path)
+        model.save_weights(weights_path)
 
 
 # show acc and loss
@@ -115,5 +121,5 @@ print("save best model frozen model")
 model.load_weights(weights_path)
 save_tf_2_frozen_graph(model, frozen_folder, frozen_name, input_shape)
 
-load_frozen_model_inference(os.path.join(frozen_folder, frozen_name))
+#load_frozen_model_inference(os.path.join(frozen_folder, frozen_name))
 

@@ -46,9 +46,9 @@ if __name__ == '__main__':
         preds_label.append(dict_id_to_label[label])
 
     plt.figure()
-    for i in range(1, len(imgs_list)):
+    for i in range(1, 36):
         plt.subplot(4, 9, i)
-        plt.imshow(x[i - 1])#, cmap ='gray')
+        plt.imshow(x[i - 1], cmap ='gray')
         plt.title(preds_label[i - 1], fontsize=5)
         plt.xticks([])
         plt.yticks([])

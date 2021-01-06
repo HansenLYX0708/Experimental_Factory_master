@@ -40,7 +40,7 @@ model = VisionTransformer(
 model.build(input_shape=(None, 40, 24, 1))
 model.summary()
 
-#optimizer = keras.optimizers.Adam(learning_rate=1e-3)
+optimizer1 = keras.optimizers.Adam(learning_rate=1e-3)
 optimizer = tfa.optimizers.AdamW(
         learning_rate=3e-4, weight_decay=1e-4
         )
