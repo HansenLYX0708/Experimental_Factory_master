@@ -5,7 +5,13 @@ import tensorflow_addons as tfa
 
 
 class ASPP(tf.keras.Model):
-
+    '''
+    空洞卷积存在两个潜在问题
+    The Gridding Effect
+    Long-ranged information might be not relevant
+    针对以上问题，提出HDC（Hybrid Dilated Convolution）
+    就是6 12 18 24 的结构
+    '''
     def __init__(self, inputs_shape=(32, 32), depth = 256, **kwargs):
         super(ASPP, self).__init__(**kwargs)
         size = inputs_shape[2:]
