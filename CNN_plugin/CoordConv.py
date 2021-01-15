@@ -358,3 +358,14 @@ class CoordinateChannel3D(_CoordinateChannel):
 get_custom_objects().update({'CoordinateChannel1D': CoordinateChannel1D,
                              'CoordinateChannel2D': CoordinateChannel2D,
                              'CoordinateChannel3D': CoordinateChannel3D})
+import tensorflow as tf
+
+import numpy as np
+if __name__ == '__main__':
+    model = CoordinateChannel2D()
+    inputs = np.random.randint(0, 256, (3, 32, 32, 1))
+    inputs = np.array(inputs, dtype=np.float32)
+    inputs = tf.convert_to_tensor(inputs)
+    outputs = model(inputs)
+    outputs = outputs.numpy()
+    print('end')

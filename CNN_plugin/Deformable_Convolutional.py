@@ -240,3 +240,14 @@ class DeformableConvLayer(Conv2D):
         b = tf.tile(batch_idx, (1, h, w, n))
         pixel_idx = tf.stack([b, y, x], axis=-1)
         return tf.gather_nd(inputs, pixel_idx)
+
+import numpy as np
+if __name__ == '__main__':
+    # have error
+    model = DeformableConvLayer(6, 3)
+    inputs = np.random.randint(0, 256, (3, 32, 32, 3))
+    inputs = np.array(inputs, dtype=np.float32)
+    inputs = tf.convert_to_tensor(inputs)
+    outputs = model(inputs)
+    outputs = outputs.numpy()
+    print('end')

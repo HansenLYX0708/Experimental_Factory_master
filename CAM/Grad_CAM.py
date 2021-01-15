@@ -29,7 +29,7 @@ classifier_layer_names = [
 img_path = keras.utils.get_file(
     "african_elephant.jpg", " https://i.imgur.com/Bvro0YD.png"
 )
-
+img_path = "C:\\Users\\1000250081\\Desktop\\dog2.jpg"
 #display(Image(img_path))
 
 #[2] Grad CAM

@@ -52,7 +52,7 @@ def tf_batch_map_coordinates(input, coords):
     coords_h = tf.clip_by_value(coords[..., 0], 0, tf.cast(input_size_h, tf.float32) - 1)
     coords = tf.stack([coords_h, coords_w], axis=-1)
     coords_tl = tf.cast(tf.floor(coords), tf.int32)
-    coords_br = tf.cast(tf.ceil(coords), tf.int32)
+    coords_br = tf.cast(tf.math.ceil(coords), tf.int32)
     coords_bl = tf.stack([coords_br[..., 0], coords_tl[..., 1]], axis=-1)
     coords_tr = tf.stack([coords_tl[..., 0], coords_br[..., 1]], axis=-1)
     idx = tf_repeat(tf.range(batch_size), n_coords)
@@ -151,3 +151,13 @@ class DeformableConv2D(object):
         x = tf.reshape(x, (-1, x_shape[3], x_shape[1], x_shape[2]))
         x = tf.transpose(x, [0, 2, 3, 1])
         return x
+
+import numpy as np
+if __name__ == '__main__':
+    model = DeformableConv2D(3)
+    inputs = np.random.randint(0, 256, (3, 32, 32, 3))
+    inputs = np.array(inputs, dtype=np.float32)
+    inputs = tf.convert_to_tensor(inputs)
+    outputs = model(inputs)
+    outputs = outputs.numpy()
+    print('end')
