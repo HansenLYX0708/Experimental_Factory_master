@@ -259,8 +259,10 @@ def SlimModel(cfg, num_cell, training=False, name='slim_model'):
     model = tf.keras.Model(inputs=inputs, outputs=predictions, name=name)
     return model
 
+import numpy as np
 
 if __name__ == '__main__':
+    '''
     from components import config
     import os
 
@@ -269,3 +271,10 @@ if __name__ == '__main__':
     model = SlimModel(cfg, num_cell=[3, 2, 2,3],training=False)
     print(len(model.layers))
     model.summary()
+    '''
+    model = BasicRFB
+    inputs = np.random.randint(0, 256, (3, 32, 32, 1))
+    inputs = np.array(inputs, dtype=np.float32)
+    inputs = tf.convert_to_tensor(inputs)
+    outputs = model(inputs, )
+    outputs = outputs.numpy()
