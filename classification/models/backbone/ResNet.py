@@ -90,6 +90,7 @@ class ResNet(keras.Model):
         self.final_bn = keras.layers.BatchNormalization()
         self.avg_pool = keras.layers.GlobalAveragePooling2D()
         self.fc = keras.layers.Dense(num_classes)
+        self.inputs = keras.layers.Input(shape=(None, 40, 24, 1))
 
     def call(self, inputs, training=None):
 

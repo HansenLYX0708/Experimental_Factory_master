@@ -36,7 +36,7 @@ input_shape = (None, 40, 24, 1)
 x_train, x_test = x_train.astype(np.float32)/255., x_test.astype(np.float32)/255.
 x_train, x_test = np.expand_dims(x_train, axis=3), np.expand_dims(x_test, axis=3)
 AUTOTUNE = tf.data.experimental.AUTOTUNE
-db_train = tf.data.Dataset.from_tensor_slices((x_train, y_train)).shuffle(buffer_size=14784).batch(batch_size).prefetch(AUTOTUNE)
+db_train = tf.data.Dataset.from_tensor_slices((x_train, y_train)).shuffle(buffer_size=84039).batch(batch_size).prefetch(AUTOTUNE)
 db_test = tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(batch_size).prefetch(AUTOTUNE)
 
 print(x_train.shape, y_train.shape)

@@ -89,7 +89,7 @@ test_path = 'C:/data/SliderSN_test/'      # 测试集输入特征路径
 test_txt = 'C:/data/SliderSN_test.csv'    # 测试集标签文件
 x_test_savepath = 'C:/data/SliderSN_mnist/sn_x_test.npy'     # 测试集输入特征存储文件
 y_test_savepath = 'C:/data/SliderSN_mnist/sn_y_test.npy'     # 测试集标签存储文件
-
+'''
 dict_label_to_id = {
     '0': 0,
     '2': 1,
@@ -107,6 +107,25 @@ dict_label_to_id = {
     'E': 13,
     'F': 14,
     'L': 15,
+}
+'''
+dict_label_to_id = {
+    '0': 0,
+    '1': 1,
+    '2': 2,
+    '3': 3,
+    '4': 4,
+    '5': 5,
+    '6': 6,
+    '7': 7,
+    '8': 8,
+    '9': 9,
+    'A': 10,
+    'B': 11,
+    'C': 12,
+    'D': 13,
+    'E': 14,
+    'F': 15,
 }
 
 def load_data():
@@ -140,7 +159,8 @@ def generateds(path, txt):      # 通过函数导入数据路径和
     return x, y_              # 返回输入特征x，返回标签y_
 
 if __name__ == '__main__':
-    #create_sn_csv('C:/data/SliderSN/', 'C:/data/SliderSN.csv')
+    create_sn_csv('C:/data/SliderSN/', 'C:/data/SliderSN.csv')
+    create_sn_csv('C:/data/SliderSN_test/', 'C:/data/SliderSN_test.csv')
 
     if os.path.exists(x_train_savepath) and os.path.exists(y_train_savepath) and os.path.exists(
             x_test_savepath) and os.path.exists(y_test_savepath):  # 判断训练集和测试集是否存在，是则直接读取
