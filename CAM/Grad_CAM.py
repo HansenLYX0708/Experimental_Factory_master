@@ -137,6 +137,9 @@ jet_heatmap = keras.preprocessing.image.array_to_img(jet_heatmap)
 jet_heatmap = jet_heatmap.resize((img.shape[1], img.shape[0]))
 jet_heatmap = keras.preprocessing.image.img_to_array(jet_heatmap)
 
+jet_heatmap_img = keras.preprocessing.image.array_to_img(jet_heatmap)
+jet_heatmap_img.save("jet_heatmap_img.bmp")
+
 # Superimpose the heatmap on original image
 superimposed_img = jet_heatmap * 0.4 + img
 superimposed_img = keras.preprocessing.image.array_to_img(superimposed_img)

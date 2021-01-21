@@ -3,6 +3,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 from classification.models.backbone.ResNet import ResNet
+from classification.models.classifiers.create_model import create_classify_cnn
 # Display
 from IPython.display import Image
 import matplotlib.pyplot as plt
@@ -21,7 +22,7 @@ preprocess_input = keras.applications.xception.preprocess_input
 decode_predictions = keras.applications.xception.decode_predictions
 '''
 img_size = (40, 24)
-last_conv_layer_name = "dynamic-blocks"
+last_conv_layer_name = "conv2d_5"
 classifier_layer_names = [
     "global_average_pooling2d",
     "dense",
@@ -31,7 +32,7 @@ classifier_layer_names = [
 img_path = keras.utils.get_file(
     "african_elephant.jpg", " https://i.imgur.com/Bvro0YD.png"
 )
-img_path = "C:/data/SliderSN_test/0/ocr_10_output_7_0.bmp"
+img_path = "C:/data/SliderSN_test/A/ocr_3_output_7_0.bmp"
 #display(Image(img_path))
 
 #[2] Grad CAM
@@ -108,18 +109,18 @@ img_array = get_img_array(img_path, size=img_size)
 #model.summary()
 
 load_weights_path = "C:\\GitWorkspace\\Experimental_Factory_master\\weights\\model_weights.h5"
-model = ResNet([2, 2, 2], 16)
+#model = ResNet([2, 2, 2], 16)
+model = create_classify_cnn(16)
 model.build(input_shape=(None, 40, 24, 1))
 model.summary()
 model.load_weights(load_weights_path)
-
 
 # Print what the top predicted class is
 preds = model.predict(img_array)
 # softmax
 preds_softmax = tf.nn.softmax(preds)
 
-#print("Predicted:", decode_predictions(preds, top=1)[0])
+print("Predicted:", preds_softmax)
 
 # Generate class activation heatmap
 heatmap = make_gradcam_heatmap(
@@ -139,7 +140,7 @@ img = keras.preprocessing.image.img_to_array(img)
 heatmap = np.uint8(255 * heatmap)
 
 # We use jet colormap to colorize heatmap
-jet = cm.get_cmap("jet")
+jet = cm.get_cmap("jet")#
 
 # We use RGB values of the colormap
 jet_colors = jet(np.arange(256))[:, :3]
@@ -150,13 +151,15 @@ jet_heatmap = keras.preprocessing.image.array_to_img(jet_heatmap)
 jet_heatmap = jet_heatmap.resize((img.shape[1], img.shape[0]))
 jet_heatmap = keras.preprocessing.image.img_to_array(jet_heatmap)
 
+jet_heatmap_img = keras.preprocessing.image.array_to_img(jet_heatmap)
+jet_heatmap_img.save("jet_heatmap_img.bmp")
 # Superimpose the heatmap on original image
 superimposed_img = jet_heatmap * 0.4 + img
 superimposed_img = keras.preprocessing.image.array_to_img(superimposed_img)
 
 # Save the superimposed image
-source_path = "elephant.jpg"
-save_path = "elephant_cam.jpg"
+source_path = "source.bmp"
+save_path = "superimposed_img.bmp"
 img = keras.preprocessing.image.array_to_img(img)
 
 superimposed_img.save(save_path)

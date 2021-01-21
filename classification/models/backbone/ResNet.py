@@ -56,6 +56,8 @@ class ResnetBlock(keras.Model):
 
 class ResNet(keras.Model):
 
+
+
     def __init__(self, block_list, num_classes, initial_filters=16, **kwargs):
         super(ResNet, self).__init__(**kwargs)
 

@@ -1,7 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
-import scipy
+import scipy.signal
+from PIL import Image
 from skimage import exposure as ex
 import imageio
 import sys
@@ -202,7 +203,15 @@ def maxEntropyEnhance(I, isBad, a=-0.3293, b=1.1258):
     Y = rgb2gm(tmp)
 
     isBad = isBad * 1
-    isBad = scipy.misc.imresize(isBad, (50, 50), interp='bicubic', mode='F')
+
+
+
+    #isBad = scipy.misc.imresize(isBad, (50, 50), interp='bicubic', mode='F')
+
+    im = Image.fromarray(isBad)
+    size = tuple((np.array(im.size) * 0.99999).astype(int))
+    isBad = np.array(im.resize((50, 50), Image.BICUBIC))
+
     isBad[isBad < 0.5] = 0
     isBad[isBad >= 0.5] = 1
     Y = Y[isBad == 1]
@@ -226,8 +235,12 @@ def Ying_2017_CAIP(img, mu=0.5, a=-0.3293, b=1.1258):
 
     # Weight matrix estimation
     t_b = np.max(I, axis=2)
-    t_our = cv2.resize(tsmooth(scipy.misc.imresize(t_b, 0.5, interp='bicubic', mode='F'), lamda, sigma),
-                       (t_b.shape[1], t_b.shape[0]), interpolation=cv2.INTER_AREA)
+    #t_our = cv2.resize(tsmooth(scipy.misc.imresize(t_b, 0.5, interp='bicubic', mode='F'), lamda, sigma),
+    #                   (t_b.shape[1], t_b.shape[0]), interpolation=cv2.INTER_AREA)
+    im = Image.fromarray(t_b)
+    size = tuple((np.array(im.size) * 0.99999).astype(int))
+    mooth = tsmooth(np.array(im.resize(size, Image.BICUBIC)), lamda, sigma)
+    t_our = cv2.resize(mooth, (t_b.shape[1], t_b.shape[0]), interpolation=cv2.INTER_AREA)
 
     # Apply camera model with k(exposure ratio)
     isBad = t_our < 0.5
@@ -247,3 +260,20 @@ def Ying_2017_CAIP(img, mu=0.5, a=-0.3293, b=1.1258):
     result[result > 255] = 255
     result[result < 0] = 0
     return result.astype(np.uint8)
+
+
+if __name__ == '__main__':
+    img_path = "C:/data/SliderSN_test/A/ocr_4_output_2_0.bmp"
+
+    img = imageio.imread(img_path, pilmode='RGB')
+    #cv2.cvtColor(img, img, cv2.COLOR_GRAY2BGR)
+
+
+    he_result = he(img)
+    imageio.imsave("he_result.jpg", he_result)
+
+    dhe_result = dhe(img)
+    imageio.imsave("dhe_result.jpg", dhe_result)
+
+    Ying = Ying_2017_CAIP(img)
+    imageio.imsave("Ying.jpg", Ying)

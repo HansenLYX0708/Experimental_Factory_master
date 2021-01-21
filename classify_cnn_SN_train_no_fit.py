@@ -11,7 +11,7 @@ from classification.datasets.sn_data import load_data
 from classification.models.callback import keras_callback
 from tensorflow.python.framework import graph_util
 from classification.utils.tf_2_pb_to_frozen_graph import save_tf_2_frozen_graph, load_frozen_model_inference
-
+from classification.models.classifiers.create_model import create_classify_cnn
 
 tf.random.set_seed(22)
 np.random.seed(22)
@@ -19,16 +19,16 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 assert tf.__version__.startswith('2.')
 
 
-load_weights_path = "model_weight.h5"
+load_weights_path = "model_weights.h5"
 log_base_path = os.path.join("C:\\_work\\__project\\PyCharm_project\\Experimental_Factory_master\\logs\\")
 model_output = os.path.join("C:\\_work\\__project\\PyCharm_project\\Experimental_Factory_master\\logs\\best_model.h5")
 weights_path = "weights\\model_weights.h5"
-frozen_folder = "C:\\_work\\__project\\PyCharm_project\\Experimental_Factory_master\\frozen_models"
+frozen_folder = "frozen_models"
 frozen_name = "frozen_model.pb"
-training = True
-load_weight = False
+training = False
+load_weight = True
 batch_size = 256
-epochs = 50
+epochs = 1
 input_shape = (None, 40, 24, 1)
 
 
@@ -44,15 +44,18 @@ print(x_test.shape, y_test.shape)
 
 
 # build model and optimizer
-
+'''
 #model = Inception(2, 16)
 model = ResNet([2, 2, 2], 16)
 model.build(input_shape=(None, 40, 24, 1))
 model.summary()
-
+'''
+model = create_classify_cnn(16)
+model.build(input_shape=(None, 40, 24, 1))
+model.summary()
 
 if load_weight:
-    model.load_weights(load_weights_path)
+    model.load_weights(weights_path)
 
 #optimizer = keras.optimizers.Adam(learning_rate=1e-3)
 optimizer = tfa.optimizers.AdamW(
@@ -90,6 +93,7 @@ for epoch in range(1, epochs + 1):
                 loss_list.append(loss.numpy())
                 acc_list.append(acc_meter_train.result().numpy())
                 acc_meter_train.reset_states()
+
 
     acc_meter_test.reset_states()
     for x, y in db_test:
