@@ -99,6 +99,14 @@ class MaxBlurPooling2D(Layer):
     def compute_output_shape(self, input_shape):
         return input_shape[0], int(np.ceil(input_shape[1] / 2)), int(np.ceil(input_shape[2] / 2)), input_shape[3]
 
+    def get_config(self):
+        config = super(MaxBlurPooling2D, self).get_config()
+        config.update({
+            "pool_size":self.pool_size,
+            "blur_kernel":self.blur_kernel,
+            "kernel_size":self.kernel_size
+        })
+
 
 class AverageBlurPooling1D(Layer):
 
