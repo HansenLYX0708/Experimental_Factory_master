@@ -5,7 +5,7 @@ def conv3x3(channels, stride=1, kernel=(3, 3)):
     return keras.layers.Conv2D(channels, kernel, strides=stride, padding='same',
                                use_bias=False,
                             kernel_initializer=tf.random_normal_initializer(),
-                               kernel_regularizer=tf.keras.regularizers.l2
+                               kernel_regularizer=tf.keras.regularizers.L2()
                                )
 
 class ResnetBlock(keras.Model):
@@ -55,9 +55,6 @@ class ResnetBlock(keras.Model):
         })
 
 class ResNet(keras.Model):
-
-
-
     def __init__(self, block_list, num_classes, initial_filters=16, **kwargs):
         super(ResNet, self).__init__(**kwargs)
 
@@ -92,7 +89,6 @@ class ResNet(keras.Model):
         self.final_bn = keras.layers.BatchNormalization()
         self.avg_pool = keras.layers.GlobalAveragePooling2D()
         self.fc = keras.layers.Dense(num_classes)
-        self.inputs = keras.layers.Input(shape=(None, 40, 24, 1))
 
     def call(self, inputs, training=None):
 
@@ -114,6 +110,5 @@ class ResNet(keras.Model):
             'num_blocks': self.num_blocks,
             'block_list': self.block_list,
             'in_channels': self.in_channels,
-            'out_channels': self.out_channels,
-
+            'out_channels': self.out_channels
         })

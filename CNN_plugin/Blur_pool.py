@@ -1,3 +1,5 @@
+# https://blog.csdn.net/weixin_41396062/article/details/104403655
+
 import numpy as np
 from tensorflow.keras.layers import Layer
 from tensorflow.keras import backend as K
@@ -289,10 +291,46 @@ class BlurPool1D(Layer):
     def compute_output_shape(self, input_shape):
         return input_shape[0], int(np.ceil(input_shape[1] / 2)), input_shape[2]
 
+
+def blur_pool(input):
+    input_shape = input.shape
+    kernel_size = 3
+    pool_size = 2
+    if kernel_size == 3:
+        bk = np.array([[1, 2, 1],
+                       [2, 4, 2],
+                       [1, 2, 1]])
+        bk = bk / np.sum(bk)
+    elif kernel_size == 5:
+        bk = np.array([[1, 4, 6, 4, 1],
+                       [4, 16, 24, 16, 4],
+                       [6, 24, 36, 24, 6],
+                       [4, 16, 24, 16, 4],
+                       [1, 4, 6, 4, 1]])
+        bk = bk / np.sum(bk)
+    else:
+        raise ValueError
+
+    bk = np.repeat(bk, input_shape[3])
+
+    bk = np.reshape(bk, (kernel_size, kernel_size, input_shape[3], 1))
+    blur_init = keras.initializers.constant(bk)
+    blur_kernel_layer = keras.layers.Layer()
+    blur_kernel = blur_kernel_layer.add_weight(name='blur_kernel',
+                                           shape=(kernel_size, kernel_size, input_shape[3], 1),
+                                           initializer=blur_init,
+                                           trainable=False)
+    x = K.depthwise_conv2d(input, blur_kernel, padding='same', strides=(pool_size, pool_size))
+    return x
+
 if __name__ == '__main__':
-    model = MaxBlurPooling2D()
-    inputs = np.random.randint(0, 256, (3, 32, 32, 1))
+
+    inputs = np.random.randint(0, 256, (3, 32, 32, 3))
     inputs = np.array(inputs, dtype=np.float32)
+    model = MaxBlurPooling2D()
     outputs = model(inputs)
     outputs = outputs.numpy()
+
+    output2 = blur_pool(inputs)
+
     print('end')
