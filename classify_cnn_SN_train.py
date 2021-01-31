@@ -5,12 +5,12 @@ from tensorflow import keras
 import tensorflow_addons as tfa
 from tensorflow.keras.utils import plot_model
 
-from classification.models.classifiers.create_model import create_classify_cnn, create_classify_cnn_2
+from classification.models.classifiers.create_model import create_classify_cnn, create_classify_cnn_2, create_classify_cnn_3
 from classification.models.backbone.Inception import Inception
 from classification.models.backbone.ResNet import ResNet
 from classification.datasets.sn_data import load_data
 from classification.models.callback import keras_callback
-
+from classification.utils.tf_2_pb_to_frozen_graph import save_tf_2_frozen_graph
 
 tf.random.set_seed(22)
 np.random.seed(22)
@@ -27,12 +27,14 @@ frozen_name = "frozen_model.pb"
 model_output = os.path.join("logs\\best_model.h5")
 training = False
 load_weight = False
+draw_Network_Graph = True
+save_frozen_model = False
 batch_size = 256
 num_classes = 16
 input_shape = (None, 40, 24, 1)
 adamw_weight_delay = 1e-4
-epochs = 1
-draw_Network_Graph = True
+epochs = 100
+
 
 # In[2]:
 
@@ -48,19 +50,18 @@ db_test = tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(batch_size)
 # In[4]:
 
 # build model and optimizer
-#model = ResNet([2, 2, 2], num_classes)
+#model = ResNet([2, 2], num_classes)
 #model.build(input_shape=input_shape)
-model = create_classify_cnn_2((40, 24, 1), num_classes)
+#model = create_classify_cnn(num_classes)
+model = create_classify_cnn(num_classes)
 model.build(input_shape=input_shape)
 model.summary()
 
 if load_weight:
-    model.load_weights(weights_path)
+    model.load_weights(model_output)
 
 if draw_Network_Graph:
     plot_model(model, model_name + ".png", show_shapes=True)
-
-model.save(model_save_path)
 
 if training:
     optimizer = tfa.optimizers.AdamW(weight_decay=adamw_weight_delay)
@@ -80,4 +81,9 @@ if training:
 
     model.save(model_save_path)
 
+if save_frozen_model:
+    # load best model
+    model.load_weights(model_output)
+    # save to frozen
+    save_tf_2_frozen_graph(model, frozen_folder, frozen_name, input_shape)
 print('end')
