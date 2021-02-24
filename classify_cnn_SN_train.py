@@ -25,13 +25,13 @@ weights_path = "weights\\model_weights.h5"
 frozen_folder = "frozen_models"
 frozen_name = "frozen_model.pb"
 model_output = os.path.join("logs\\best_model.h5")
-training = False
+training = True
 load_weight = False
 batch_size = 256
 num_classes = 16
 input_shape = (None, 40, 24, 1)
 adamw_weight_delay = 1e-4
-epochs = 1
+epochs = 10
 draw_Network_Graph = True
 
 # In[2]:
@@ -50,7 +50,7 @@ db_test = tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(batch_size)
 # build model and optimizer
 #model = ResNet([2, 2, 2], num_classes)
 #model.build(input_shape=input_shape)
-model = create_classify_cnn_2((40, 24, 1), num_classes)
+model = create_classify_cnn( num_classes)
 model.build(input_shape=input_shape)
 model.summary()
 
