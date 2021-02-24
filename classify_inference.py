@@ -7,27 +7,27 @@ import matplotlib.pyplot as plt
 
 dict_id_to_label = {
     0:'0',
-    1:'2',
-    2:'3',
-    3:'4',
-    4:'5',
-    5:'6',
-    6:'7',
-    7:'8',
-    8:'9',
-    9:'A',
-    10:'B',
-    11:'C',
-    12:'D',
-    13:'E',
-    14:'F',
-    15:'L',
+    1:'1',
+    2:'2',
+    3:'3',
+    4:'4',
+    5:'5',
+    6:'6',
+    7:'7',
+    8:'8',
+    9:'9',
+    10:'A',
+    11:'B',
+    12:'C',
+    13:'D',
+    14:'E',
+    15:'F',
 }
 
 if __name__ == '__main__':
-    frozen_folder = "C:\\_work\\__project\\PyCharm_project\\Experimental_Factory_master\\frozen_models"
+    frozen_folder = "G:\\github\\Experimental_Factory_master\\frozen_models"
     frozen_name = "frozen_model.pb"
-    img_path = "C:\\data\\SliderSN_inference\\"
+    img_path = "G:\\_work\\_data\\sliderSN_data\\SliderSN_inference\\"
     inference_model = load_frozen_model_inference(os.path.join(frozen_folder, frozen_name))
     x = []
     imgs_list = os.listdir(img_path)
@@ -46,10 +46,10 @@ if __name__ == '__main__':
         preds_label.append(dict_id_to_label[label])
 
     plt.figure()
-    for i in range(1, 36):
-        plt.subplot(4, 9, i)
+    for i in range(1, 21):
+        plt.subplot(4, 5, i)
         plt.imshow(x[i - 1], cmap ='gray')
-        plt.title(preds_label[i - 1], fontsize=5)
+        plt.title(preds_label[i - 1], fontsize=10, color='Blue',bbox=dict(facecolor="yellow", edgecolor='black', alpha=0.65))
         plt.xticks([])
         plt.yticks([])
 

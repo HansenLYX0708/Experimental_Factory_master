@@ -3,11 +3,13 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 from classification.models.backbone.ResNet import ResNet
-from classification.models.classifiers.create_model import create_classify_cnn
+from classification.models.classifiers.create_model import create_classify_cnn, create_classify_cnn_2
 # Display
 from IPython.display import Image
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import os
+from classification.utils.tf_2_pb_to_frozen_graph import load_frozen_model_inference
 
 #[1]Configurable parameters
 '''
@@ -22,17 +24,24 @@ preprocess_input = keras.applications.xception.preprocess_input
 decode_predictions = keras.applications.xception.decode_predictions
 '''
 img_size = (40, 24)
-last_conv_layer_name = "conv2d_5"
+last_conv_layer_name = "conv2d_1"
 classifier_layer_names = [
+    #"tf_op_layer_DepthwiseConv2dN",
+    #"conv2d_1",
+    #"tf_op_layer_DepthwiseConv2dN",
+    "conv2d_2",
+    #"tf_op_layer_DepthwiseConv2dN",
     "global_average_pooling2d",
     "dense",
 ]
-
+'''
 # The local path to our target image
 img_path = keras.utils.get_file(
     "african_elephant.jpg", " https://i.imgur.com/Bvro0YD.png"
 )
-img_path = "C:/data/SliderSN_test/A/ocr_3_output_7_0.bmp"
+'''
+
+img_path = "G:\\_work\\_data\\sliderSN_data\\SliderSN_test\\0\\ocr_108_output_8_2_0.bmp"
 #display(Image(img_path))
 
 #[2] Grad CAM
@@ -108,13 +117,22 @@ img_array = get_img_array(img_path, size=img_size)
 #model = model_builder(weights="imagenet")
 #model.summary()
 
-load_weights_path = "C:\\GitWorkspace\\Experimental_Factory_master\\weights\\model_weights.h5"
+load_weights_path = "G:\\github\\Experimental_Factory_master\\logs\\1_MaxPool\\best_model.h5"
 #model = ResNet([2, 2, 2], 16)
-model = create_classify_cnn(16)
+#model = create_classify_cnn_2([40, 24, 1], 16)
+model = create_classify_cnn_2(16)
 model.build(input_shape=(None, 40, 24, 1))
 model.summary()
 model.load_weights(load_weights_path)
 
+'''
+frozen_folder = "G:\\github\\Experimental_Factory_master\\frozen_models"
+frozen_name = "frozen_model.pb"
+img_path = "G:\\_work\\_data\\sliderSN_data\\SliderSN_inference\\"
+model = load_frozen_model_inference(os.path.join(frozen_folder, frozen_name))
+
+model.summary()
+'''
 # Print what the top predicted class is
 preds = model.predict(img_array)
 # softmax
