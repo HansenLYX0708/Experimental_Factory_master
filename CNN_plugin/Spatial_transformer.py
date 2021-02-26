@@ -1,6 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras.layers import Conv2D, Dense
 import numpy as np
+import cv2
 
 class SpatialTransformer(tf.keras.Model):
     def __init__(self):
@@ -120,8 +121,16 @@ def grid_sample(im, grid):
 if __name__ == '__main__':
     model = SpatialTransformer()
     #model.build(input_shape=(None, 32, 32, 1))
-    inputs = np.random.randint(0, 256, (3, 32, 32, 1))
+
+    img_name = 'C:/data/SliderSN_test/0/ocr_10_output_7_0.bmp'
+    img = cv2.imread(img_name, 0)
+    inputs = img
+    #inputs = np.random.randint(0, 256, (3, 32, 32, 1))
+    inputs = np.reshape(inputs, (1, 40, 24, 1))
     inputs = np.array(inputs, dtype=np.float32)
     outputs = model(inputs)
     outputs = outputs.numpy()
+    outputs = np.reshape(outputs, (40, 24))
+
+    cv2.imwrite("a.bmp", outputs)
     print('end')
