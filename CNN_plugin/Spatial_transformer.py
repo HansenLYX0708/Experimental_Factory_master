@@ -118,6 +118,21 @@ def grid_sample(im, grid):
     im_t = im_t / Wd
     return im_t
 
+def spatial_yransform_network(x):
+    b, w, h, c = x.shape
+    x1 = Conv2D(16, 3, activation="relu")(x)
+    x1 = Conv2D(16, 3, activation="relu")(x1)
+
+    x1 = tf.reshape(x1, [b, -1])
+
+    x1 = Dense(514, activation="relu")(x1)
+    init = tf.constant_initializer([1, 0, 0, 0, 1, 0])
+    theta = Dense(6, activation=tf.tanh, bias_initializer=init)(x1)
+    grid = gen_grid(x, theta)
+    x_t = grid_sample(x, grid)
+    return x_t
+
+
 if __name__ == '__main__':
     model = SpatialTransformer()
     #model.build(input_shape=(None, 32, 32, 1))
