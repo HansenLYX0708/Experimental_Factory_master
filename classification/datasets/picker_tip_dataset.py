@@ -4,6 +4,7 @@ import numpy as np
 import os
 from classification.utils.csv_rwa import write_csv
 from classification.datasets.sn_data import generateds
+from classification.datasets.cv import augmentation_imgs_spesial
 
 class PickerTipDataset(object):
     def __init__(self, csv_path, imagesfolder):
@@ -121,15 +122,22 @@ if __name__ == '__main__':
     # convert tif to bmp,
     rename_preprocess('C:/data/picker_tip/Good', 'C:/data/picker_tip_convert/Good/')
     rename_preprocess('C:/data/picker_tip/NG', 'C:/data/picker_tip_convert/NG/')
-
-    # Get class tag
-    create_class_csv('C:/data/picker_tip_convert/', 'C:/data/datasets_labels/picker_tip.csv')
     '''
+    rename_preprocess('C:/data/picker_tip/validation', 'C:/data/picker_tip_augmentation/validation/')
+
     #picker_tip_ds = PickerTipDataset('C:/data/datasets_labels/picker_tip.csv',
     #                                 "C:/data/picker_tip_convert/")
 
+    # Data Augmentation
+    #augmentation_imgs_spesial("C:/data/picker_tip_convert/Good", "C:/data/picker_tip_augmentation/Good", 9)
+    #augmentation_imgs_spesial("C:/data/picker_tip_convert/NG", "C:/data/picker_tip_augmentation/NG", 19)
+
+    # Get class tag
+    #create_class_csv('C:/data/picker_tip_convert/', 'C:/data/datasets_labels/picker_tip.csv')
+    '''
     print('-------------Generate Datasets-----------------')
     x_train, y_train = generateds(train_path, train_txt)
     print('-------------Save Datasets-----------------')
     np.save(x_train_savepath, x_train)
     np.save(y_train_savepath, y_train)
+    '''

@@ -59,10 +59,12 @@ def augmentation_imgs(imgs_folder, rate=1):
 
 def augmentation_imgs_spesial(imgs_folder, output_folder, rate=1):
     # clean up output folder
-    shutil.rmtree(output_folder)
-    os.mkdir(output_folder)
+    if os.path.exists(output_folder):
+        shutil.rmtree(output_folder)
+        os.mkdir(output_folder)
+    else:
+        os.mkdir(output_folder)
     # get path and
-
 
     imgs_list = os.listdir(imgs_folder)
     for i in range(rate):
