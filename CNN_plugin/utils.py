@@ -8,3 +8,8 @@ def get_initial_weights(output_size):
     W = np.zeros((output_size, 6), dtype='float32')
     weights = [W, b.flatten()]
     return weights
+
+if __name__ == '__main__':
+    output_size = 50
+    weight = get_initial_weights(output_size)
+    print('end')

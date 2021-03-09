@@ -38,7 +38,7 @@ class BilinearInterpolation(Layer):
         return (None, height, width, num_channels)
 
     def call(self, tensors, mask=None):
-        X, transformation = tensors
+        [X, transformation] = tensors
         output = self._transform(X, transformation, self.output_size)
         return output
 
@@ -135,3 +135,9 @@ class BilinearInterpolation(Layer):
         new_shape = (batch_size, output_size[0], output_size[1], num_channels)
         interpolated_image = K.reshape(interpolated_image, new_shape)
         return interpolated_image
+
+if __name__ == '__main__':
+    lay = BilinearInterpolation((30, 30))
+
+
+    y = lay([])

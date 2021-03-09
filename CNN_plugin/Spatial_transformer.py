@@ -133,8 +133,8 @@ def spatial_yransform_network(x):
     return x_t
 
 
-from utils import get_initial_weights
-from layers import BilinearInterpolation
+from CNN_plugin.utils import get_initial_weights
+from CNN_plugin.layers import BilinearInterpolation
 from tensorflow.keras.layers import Input, MaxPool2D, Flatten, Dense, Activation
 from tensorflow.keras import  Model
 #####################################################

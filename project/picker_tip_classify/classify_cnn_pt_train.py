@@ -20,10 +20,10 @@ model_output = os.path.join("logs\\best_model.h5")
 weights_path = "weights\\model_weights.h5"
 frozen_folder = "frozen_models"
 frozen_name = "frozen_model.pb"
-training = False
-validation = True
+training = True
+validation = False
 load_weight = False
-load_model = True
+load_model = False
 draw_Network_Graph = False
 batch_size = 16
 num_classes = 2
@@ -67,16 +67,18 @@ if training:
     loss = keras.losses.BinaryCrossentropy()
     model.compile(optimizer=optimizer, loss=loss, metrics=['acc'])
 
-    callback = keras_callback.callback_setting(log_base_path, model_output, weight_only=False, if_log=True)
+    callback = keras_callback.callback_setting(log_base_path, model_output, weight_only=True, if_log=True)
 
     history = model.fit(
         db_train,
-        #validation_data=db_train,
+        validation_data=db_train,
         epochs=epochs,
         shuffle=True,
         verbose=1,
         callbacks=callback)
 
+    # save best model
+    model.load_weights(model_output)
     model.save(model_save_path)
 
 if validation:
