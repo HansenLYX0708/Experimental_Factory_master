@@ -2,8 +2,8 @@ import tensorflow_addons as tfa
 import tensorflow as tf
 from sklearn.metrics import roc_curve
 
-tfa.layers.adaptive_pooling
-tf.keras.layers.MaxPool2D()
-tf.nn.max_pool2d()
+a = [0.1, 1, 0.9999,  1]
+a[a > 0.5] = 1
 
-tf.keras.metrics.AUC()
+
+print('end')

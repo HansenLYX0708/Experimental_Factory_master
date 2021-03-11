@@ -117,16 +117,22 @@ def load_data():
     #x_test = np.reshape(x_test_save, (len(x_test_save), 28, 28))  # 同上
     return (x_train_save, y_train)
 
+def load_validation_data():
+    x_validation_save = np.load('C:/data/npy_file/pt_x_validation.npy')
+    y_validation = np.load('C:/data/npy_file/pt_y_validation.npy')
+    #x_train = np.reshape(x_train_save, (len(x_train_save), 28, 28))  # 将输入特征转换为28*28的形式
+    #x_test = np.reshape(x_test_save, (len(x_test_save), 28, 28))  # 同上
+    return (x_validation_save, y_validation)
+
+
 if __name__ == '__main__':
     '''
     # convert tif to bmp,
     rename_preprocess('C:/data/picker_tip/Good', 'C:/data/picker_tip_convert/Good/')
     rename_preprocess('C:/data/picker_tip/NG', 'C:/data/picker_tip_convert/NG/')
     '''
-    rename_preprocess('C:/data/picker_tip/validation', 'C:/data/picker_tip_augmentation/validation/')
+    #rename_preprocess('C:/data/picker_tip/validation', 'C:/data/picker_tip_augmentation/validation/')
 
-    #picker_tip_ds = PickerTipDataset('C:/data/datasets_labels/picker_tip.csv',
-    #                                 "C:/data/picker_tip_convert/")
 
     # Data Augmentation
     #augmentation_imgs_spesial("C:/data/picker_tip_convert/Good", "C:/data/picker_tip_augmentation/Good", 9)
@@ -141,3 +147,15 @@ if __name__ == '__main__':
     np.save(x_train_savepath, x_train)
     np.save(y_train_savepath, y_train)
     '''
+
+
+    #rename_preprocess('C:/data/picker_tip/validation/NG/', 'C:/data/picker_tip_augmentation/validation/NG/')
+    #rename_preprocess('C:/data/picker_tip/validation/Good/', 'C:/data/picker_tip_augmentation/validation/Good/')
+
+    #create_class_csv('C:/data/picker_tip_augmentation/validation/', 'C:/data/datasets_labels/picker_tip_validation.csv')
+
+    print('-------------Generate Datasets-----------------')
+    x_validation, y_validation = generateds('C:/data/picker_tip_augmentation/validation/', 'C:/data/datasets_labels/picker_tip_validation.csv')
+    print('-------------Save Datasets-----------------')
+    np.save('C:/data/npy_file/pt_x_validation.npy', x_validation)
+    np.save('C:/data/npy_file/pt_y_validation.npy', y_validation)
