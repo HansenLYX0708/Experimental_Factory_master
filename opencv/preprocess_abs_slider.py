@@ -39,15 +39,19 @@ def preprocess_single_image(image, save_path):
     #contours_img = cv2.drawContours(image, contours, index, (0, 255, 0), 2)
     #plt.imshow(contours_img, "gray")
     min_Rect = cv2.minAreaRect(contours[index])
+    margn_Rect = []
+    margn_Rect.append(min_Rect[0])
+    margn_Rect.append([min_Rect[1][0] + 50, min_Rect[1][1] + 50])
+    margn_Rect.append(min_Rect[2])
 
     # ROI
-    width = int(min_Rect[1][0])
-    height = int(min_Rect[1][1])
-    angle = min_Rect[2]
+    width = int(margn_Rect[1][0])
+    height = int(margn_Rect[1][1])
+    angle = margn_Rect[2]
     if width < height:  # 计算角度，为后续做准备
         angle = angle - 90
     print(angle)
-    src_pts = cv2.boxPoints(min_Rect)
+    src_pts = cv2.boxPoints(tuple(margn_Rect))
     dst_pts = np.array([[0, height],
                         [0, 0],
                         [width, 0],
