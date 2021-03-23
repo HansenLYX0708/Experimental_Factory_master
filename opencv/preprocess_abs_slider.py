@@ -50,7 +50,7 @@ def preprocess_single_image(image, save_path):
     angle = margn_Rect[2]
     if width < height:  # 计算角度，为后续做准备
         angle = angle - 90
-    print(angle)
+    #print(angle)
     src_pts = cv2.boxPoints(tuple(margn_Rect))
     dst_pts = np.array([[0, height],
                         [0, 0],
@@ -70,7 +70,7 @@ def preprocess_single_image(image, save_path):
     #plt.imshow(warped, "gray")
     #plt.show()
     resize_warped = cv2.resize(warped, (1280, 1024), cv2.INTER_AREA)
-    cv2.imwrite(save_path, resize_warped)
+    # cv2.imwrite(save_path, resize_warped)
     return
 
 def preprocess_image(image, img_name, save_folder, label):
@@ -95,6 +95,18 @@ def preprocess_folder(image_folder, save_folder, label):
         image_path = os.path.join(image_folder, img)
         image = cv2.imread(image_path, 0)
         preprocess_image(image, img_name, save_folder, label)
+
+
+def preprocess_simple(image, img_name, save_folder, label):
+    rows = image.shape[0]
+    cols = image.shape[1]
+
+    images = []
+    images.append(image[0:rows // 2, 0:cols // 2])
+    images.append(image[0:rows // 2, cols // 2:cols])
+    images.append(image[rows // 2:rows, 0:cols // 2])
+    images.append(image[rows // 2:rows, cols // 2:cols])
+    return images
 
 if __name__ == '__main__':
     image_path1 = "C:/data/From THO Basler Capture-selected/ABS A2/"
