@@ -1,9 +1,9 @@
 import tensorflow as tf
-from    tensorflow.keras import layers
+from tensorflow.keras import layers
 
-from detection.core.bbox import transforms
-from detection.core.loss import losses
-from detection.utils.misc import *
+from detection.fasterRCNN.core.bbox import transforms
+from detection.fasterRCNN.core.loss import losses
+from detection.fasterRCNN.utils.misc import *
 
 class BBoxHead(tf.keras.Model):
     def __init__(self, num_classes, 

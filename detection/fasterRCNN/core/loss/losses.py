@@ -1,5 +1,5 @@
 import tensorflow as tf
-from    tensorflow import keras
+from tensorflow import keras
 import numpy as np
 
 def smooth_l1_loss(y_true, y_pred):

@@ -78,7 +78,7 @@ def main():
             maker.size(
                 maker.height(str(img.shape[0])),
                 maker.width(str(img.shape[1])),
-                maker.depth(str(img.shape[2])),
+                #maker.depth(str(img.shape[2])),
             ),
             maker.segmented(),
         )
@@ -114,8 +114,11 @@ def main():
             )
 
         captions = [class_names[l] for l in labels]
+        show_img = PIL.Image.open(img_file)
+        show_img = show_img.convert('RGB')
+        show_img = np.asarray(show_img)
         viz = labelme.utils.draw_instances(
-            img, bboxes, labels, captions=captions
+            show_img, bboxes, labels, captions=captions
         )
         PIL.Image.fromarray(viz).save(out_viz_file)
 

@@ -77,10 +77,23 @@ def rename_preprocess(imgs_path, convert_path, index = 0):
         image_path = os.path.join(imgs_path, image)
         image_data = cv2.imread(image_path, 0)
         height, width = image_data.shape
-        resize_image = cv2.resize(image_data, (int(width / 4), int(height / 4)))
+        resize_image = cv2.resize(image_data, (int(width / 2), int(height / 2)))
 
         cv2.imwrite(os.path.join(convert_path, file_name), resize_image)
     return
+
+def rename(imgs_path, new_name):
+    assert os.path.exists(imgs_path)
+    files = os.listdir(imgs_path)
+
+    for file in files:
+        file_name_without = file.split('.')[0]
+
+        file_name = os.path.join(imgs_path, file)
+
+
+    return
+
 
 def create_class_csv(imgs_path, csv_path):
     assert os.path.exists(imgs_path)
@@ -124,13 +137,23 @@ def load_validation_data():
     #x_test = np.reshape(x_test_save, (len(x_test_save), 28, 28))  # 同上
     return (x_validation_save, y_validation)
 
+def change_img_format(imgs_path, convert_path, index = 0):
+    assert os.path.exists(imgs_path)
+    files = os.listdir(imgs_path)
+    for image in files:
+        index = index + 1
+        file_name = str(index) + ".bmp"
+        image_path = os.path.join(imgs_path, image)
+        image_data = cv2.imread(image_path, 0)
+        cv2.imwrite(os.path.join(convert_path, file_name), image_data)
+
 
 if __name__ == '__main__':
-    '''
+
     # convert tif to bmp,
-    rename_preprocess('C:/data/picker_tip/Good', 'C:/data/picker_tip_convert/Good/')
-    rename_preprocess('C:/data/picker_tip/NG', 'C:/data/picker_tip_convert/NG/')
-    '''
+    #rename_preprocess('C:/data/picker_tip/Good', 'C:/data/picker_tip_convert/Good/')
+    #rename_preprocess('C:/data/picker_tip/NG', 'C:/data/picker_tip_convert/NG/')
+
     #rename_preprocess('C:/data/picker_tip/validation', 'C:/data/picker_tip_augmentation/validation/')
 
 
@@ -153,9 +176,13 @@ if __name__ == '__main__':
     #rename_preprocess('C:/data/picker_tip/validation/Good/', 'C:/data/picker_tip_augmentation/validation/Good/')
 
     #create_class_csv('C:/data/picker_tip_augmentation/validation/', 'C:/data/datasets_labels/picker_tip_validation.csv')
-
+    '''
     print('-------------Generate Datasets-----------------')
     x_validation, y_validation = generateds('C:/data/picker_tip_augmentation/validation/', 'C:/data/datasets_labels/picker_tip_validation.csv')
     print('-------------Save Datasets-----------------')
     np.save('C:/data/npy_file/pt_x_validation.npy', x_validation)
     np.save('C:/data/npy_file/pt_y_validation.npy', y_validation)
+    '''
+
+    change_img_format('C:/data/picker_tip/validation/NG', 'C:/data/picker_tip/validation/NG')
+    change_img_format('C:/data/picker_tip/validation/Good', 'C:/data/picker_tip/validation/Good')

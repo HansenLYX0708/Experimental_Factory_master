@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-from detection.utils.misc import *
+from detection.fasterRCNN.utils.misc import *
 
 def bbox2delta(box, gt_box, target_means, target_stds):
     '''Compute refinement needed to transform box to gt_box.

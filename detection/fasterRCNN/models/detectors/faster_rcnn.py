@@ -1,13 +1,13 @@
 import tensorflow as tf
 
-from detection.models.backbones import resnet
-from detection.models.necks import fpn
-from detection.models.rpn_heads import rpn_head
-from detection.models.bbox_heads import bbox_head
-from detection.models.roi_extractors import roi_align
-from detection.models.detectors.test_mixins import RPNTestMixin, BBoxTestMixin
+from detection.fasterRCNN.models.backbones import resnet
+from detection.fasterRCNN.models.necks import fpn
+from detection.fasterRCNN.models.rpn_heads import rpn_head
+from detection.fasterRCNN.models.bbox_heads import bbox_head
+from detection.fasterRCNN.models.roi_extractors import roi_align
+from detection.fasterRCNN.models.detectors.test_mixins import RPNTestMixin, BBoxTestMixin
 
-from detection.core.bbox import bbox_target
+from detection.fasterRCNN.core.bbox import bbox_target
 
 
 

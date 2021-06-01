@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 from pycocotools.coco import COCO
 
-from detection.datasets import transforms, utils
+from detection.fasterRCNN.datasets import transforms, utils
 
 class CocoDataSet(object):
     def __init__(self, dataset_dir, subset,
@@ -30,7 +30,7 @@ class CocoDataSet(object):
             raise AssertionError('subset must be "train" or "val".')
             
 
-        self.coco = COCO("{}/annotations/instances_{}2017.json".format(dataset_dir, subset))
+        self.coco = COCO("{}/annotations/{}.json".format(dataset_dir, subset))
 
         # get the mapping from original category ids to labels
         self.cat_ids = self.coco.getCatIds()
@@ -44,7 +44,7 @@ class CocoDataSet(object):
         if debug:
             self.img_ids, self.img_infos = self.img_ids[:50], self.img_infos[:50]
             
-        self.image_dir = "{}/{}2017".format(dataset_dir, subset)
+        self.image_dir = "{}/{}".format(dataset_dir, subset)
         
         self.flip_ratio = flip_ratio
         

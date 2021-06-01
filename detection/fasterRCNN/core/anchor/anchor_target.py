@@ -1,6 +1,6 @@
 import tensorflow as tf
-from detection.core.bbox import geometry, transforms
-from detection.utils.misc import trim_zeros
+from detection.fasterRCNN.core.bbox import geometry, transforms
+from detection.fasterRCNN.utils.misc import trim_zeros
 
 
 

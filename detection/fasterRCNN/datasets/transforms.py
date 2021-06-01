@@ -1,6 +1,6 @@
 import numpy as np
 
-from detection.datasets.utils import *
+from detection.fasterRCNN.datasets.utils import *
 
 class ImageTransform(object):
     '''Preprocess the image.

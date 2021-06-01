@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-from detection.utils.misc import *
+from detection.fasterRCNN.utils.misc import *
 
 class PyramidROIAlign(tf.keras.layers.Layer):
 

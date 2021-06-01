@@ -1,11 +1,11 @@
 import  tensorflow as tf
 from    tensorflow.keras import layers
 
-from detection.core.bbox import transforms
-from detection.utils.misc import *
+from detection.fasterRCNN.core.bbox import transforms
+from detection.fasterRCNN.utils.misc import *
 
-from detection.core.anchor import anchor_generator, anchor_target
-from detection.core.loss import losses
+from detection.fasterRCNN.core.anchor import anchor_generator, anchor_target
+from detection.fasterRCNN.core.loss import losses
 
 class RPNHead(tf.keras.Model):
 

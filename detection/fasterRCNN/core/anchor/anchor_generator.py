@@ -1,5 +1,5 @@
 import tensorflow as tf
-from detection.utils.misc import calc_img_shapes, calc_batch_padded_shape
+from detection.fasterRCNN.utils.misc import calc_img_shapes, calc_batch_padded_shape
 
 class AnchorGenerator:
     """

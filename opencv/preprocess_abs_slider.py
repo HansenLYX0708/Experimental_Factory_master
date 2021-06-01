@@ -69,8 +69,8 @@ def preprocess_single_image(image, save_path):
         warped = cv2.flip(warped, 1)
     #plt.imshow(warped, "gray")
     #plt.show()
-    resize_warped = cv2.resize(warped, (1280, 1024), cv2.INTER_AREA)
-    # cv2.imwrite(save_path, resize_warped)
+    #resize_warped = cv2.resize(warped, (1280, 1024), cv2.INTER_AREA)
+    cv2.imwrite(save_path, warped)
     return
 
 def preprocess_image(image, img_name, save_folder, label):
