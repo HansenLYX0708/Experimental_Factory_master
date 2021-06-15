@@ -38,7 +38,7 @@ class Coco_analyze():
 
 
 if __name__ == '__main__':
-    annotation_file_1 = "C:\\data\\xinye\\a_annotations.json"
+    annotation_file_1 = "C:\\data\\Slider_abs\\train.json"
     annotation_file_2 = "C:\\data\\xinye\\b_annotations.json"
 
     cocoanalyze = Coco_analyze(annotation_file_1)
@@ -49,13 +49,8 @@ if __name__ == '__main__':
     #plt.rcParams['figure.figsize'] = (8.0, 4.0)
     #plt.rcParams['savefig.dpi'] = 500
     #plt.rcParams['figure.dpi'] = 500
-    plt.savefig("a_annotation.png")
+    plt.savefig("train.png")
 
-    cocoanalyze = Coco_analyze(annotation_file_2)
-    cocoanalyze.Data_load()
-    df = cocoanalyze.Get_image_num_summary()
-    df.plot(kind='bar')
-    plt.savefig("b_annotation.png")
 
 
     print('end')
