@@ -4,9 +4,9 @@ import pandas as pd
 from paddle.io import Dataset
 from paddle.vision.transforms import transforms
 
-Train_Dir = './data/data60/training.csv'
-Test_Dir = './data/data60/test.csv'
-lookid_dir = './data/data60/IdLookupTable.csv'
+Train_Dir = 'C:/data/facial-keypoints-detection/training.csv'
+Test_Dir = 'C:/data/facial-keypoints-detection/test.csv'
+lookid_dir = 'C:/data/facial-keypoints-detection/IdLookupTable.csv'
 
 
 class ImgTransforms(object):
@@ -23,8 +23,8 @@ class ImgTransforms(object):
             img = np.expand_dims(img, axis=2)
         img = img.transpose(self.format)
 
-        if img.shape[0] == 1:
-            img = np.repeat(img, 3, axis=0)
+        #if img.shape[0] == 1:
+        #    img = np.repeat(img, 3, axis=0)
         return img
 
 
