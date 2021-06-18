@@ -80,11 +80,3 @@ class FaceDataset(Dataset):
     # 返回整个数据集的总数
     def __len__(self):
         return len(self.data_img)
-
-
-# 训练数据集和验证数据集
-train_dataset = FaceDataset(Train_Dir, mode='train')
-val_dataset = FaceDataset(Train_Dir, mode='val')
-
-# 测试数据集
-test_dataset = FaceDataset(Test_Dir, mode='test')
