@@ -12,7 +12,7 @@ def create_dir_not_exist(path):
 # 随机改变亮暗、对比度和颜色等
 def random_distort(img):
     # 随机改变亮度
-    def random_brightness(img, lower=0.8, upper=1.2):
+    def random_brightness(img, lower=0.5, upper=2):
         e = np.random.uniform(lower, upper)
         return ImageEnhance.Brightness(img).enhance(e)
     # 随机改变对比度
@@ -132,6 +132,13 @@ def augmentation_all_cat_spesicial():
 if __name__ == '__main__':
     #augmentation_all_cat()
     #augmentation_all_cat_spesicial()
-    augmentation_imgs("C:/data/SliderSN/F", 4)
+    #augmentation_imgs("C:/data/SliderSN/F", 4)
 
+    img = cv2.imread("C:\\data\\slider_abs_6\\12_ROI\\1622190603197.bmp")
+
+    for i in range(10):
+        random_img = random_distort(img)
+        cv2.imwrite(str(i)+ ".bmp", random_img)
+    #cv2.imshow("", random_img)
+    #cv2.waitKey()
 
