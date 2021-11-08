@@ -25,10 +25,10 @@ model_output = os.path.join("C:\\_work\\__project\\PyCharm_project\\Experimental
 weights_path = "weights\\model_weights.h5"
 frozen_folder = "frozen_models"
 frozen_name = "frozen_model.pb"
-training = True
-load_weight = False
+training = False
+load_weight = True
 batch_size = 256
-epochs = 1
+epochs = 0
 input_shape = (None, 40, 24, 1)
 
 

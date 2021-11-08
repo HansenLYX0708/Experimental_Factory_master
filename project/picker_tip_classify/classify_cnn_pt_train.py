@@ -7,7 +7,6 @@ from tensorflow.keras.utils import plot_model
 from PIL import Image
 from sklearn import metrics
 
-
 from classification.models.classifiers.create_model import create_classify_pt_cnn, create_classify_cnn,create_classify_pt_cnn_2
 from classification.models.backbone.Inception import Inception
 from classification.models.backbone.ResNet import ResNet

@@ -32,13 +32,13 @@ class Coco_analyze():
             annId = self.coData.getAnnIds(imgIds=imgId, catIds=catId, iscrowd=None)
             summary.append([cat_name, len(imgId), len(annId)])
 
-        df = pd.DataFrame(summary, columns=['Name', 'Image Nums', 'Labels Nums'])
+        df = pd.DataFrame(summary, columns=['Name', 'Number of images', 'Number of labels'])
 
         return df
 
 
 if __name__ == '__main__':
-    annotation_file_1 = "C:\\data\\Slider_abs\\train.json"
+    annotation_file_1 = "C:\\data\\Slider_abs\\_coco_format\\annotations\\train.json"
     annotation_file_2 = "C:\\data\\xinye\\b_annotations.json"
 
     cocoanalyze = Coco_analyze(annotation_file_1)

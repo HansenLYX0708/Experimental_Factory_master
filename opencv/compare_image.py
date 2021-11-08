@@ -110,6 +110,6 @@ if __name__ == '__main__':
     img2 = cv2.imread("C:/data/slider_abs_6/12_ROI/1622190678418.bmp")
 
     # func1 = compare_img_default(img1, img2)
-    # func2 = compare_img_hist(img1, img2)
-    c = compare_img_p_hash(img1, img2)
+    c = compare_img_hist(img1, img2)
+    #c = compare_img_p_hash(img1, img2)
     print(c)

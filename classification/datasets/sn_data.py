@@ -82,13 +82,13 @@ def create_sn_csv(imgs_path, csv_path):
 
 train_path = 'G:/_work/_data/SliderSN/'    # 训练集输入特征路径
 train_txt = 'C:/data/SliderSN.csv'  # 训练集标签txt文件
-x_train_savepath = 'G:/_work/_data/sliderSN_data/SliderSN_mnist/sn_x_train.npy'   # 训练集输入特征存储文件
-y_train_savepath = 'G:/_work/_data/sliderSN_data/SliderSN_mnist/sn_y_train.npy'   # 训练集标签存储文件
+x_train_savepath = 'C:/data/SliderSN_mnist/sn_x_train.npy'   # 训练集输入特征存储文件
+y_train_savepath = 'C:/data/SliderSN_mnist/sn_y_train.npy'   # 训练集标签存储文件
 
 test_path = 'G:/_work/_data/SliderSN_test/'      # 测试集输入特征路径
 test_txt = 'C:/data/SliderSN_test.csv'    # 测试集标签文件
-x_test_savepath = 'G:/_work/_data/sliderSN_data/SliderSN_mnist/sn_x_test.npy'     # 测试集输入特征存储文件
-y_test_savepath = 'G:/_work/_data/sliderSN_data/SliderSN_mnist/sn_y_test.npy'     # 测试集标签存储文件
+x_test_savepath = 'C:/data/SliderSN_mnist/sn_x_test.npy'     # 测试集输入特征存储文件
+y_test_savepath = 'C:/data/SliderSN_mnist/sn_y_test.npy'     # 测试集标签存储文件
 '''
 dict_label_to_id = {
     '0': 0,
