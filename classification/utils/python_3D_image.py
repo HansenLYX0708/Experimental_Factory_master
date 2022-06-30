@@ -8,7 +8,11 @@ from matplotlib.ticker import LinearLocator, FormatStrFormatter
 fig = plt.figure(figsize=(16,12))
 ax = fig.gca(projection="3d")
 
-path = "C:/data/SliderSN/B/sn_B_1.bmp"
+path = "C:\\GitWorkspace\\MyVisionTool\\MyVisionTool\\dst.png"
+#"C:\\data\\Slider_abs\\_coco_format\\train\\5-1-4x_1.bmp"
+#"C:\\GitWorkspace\\MyVisionTool\\MyVisionTool\\dst.png"
+#"C:\\data\\slider_abs_6\\12_ROI\\1622190641866.bmp"
+# #"C:/data/SliderSN/B/sn_B_1.bmp"
 img = cv.imread(path)		# 修改图片位置
 img = cv.cvtColor(img,cv.COLOR_BGR2GRAY)
 imgd = np.array(img)      # image类 转 numpy
