@@ -1,0 +1,31 @@
+mode: fluid
+draw_threshold: 0.5
+metric: COCO
+use_dynamic_shape: true
+arch: TTFNet
+min_subgraph_size: 60
+Preprocess:
+- interp: 1
+  keep_ratio: false
+  target_size:
+  - 640
+  - 640
+  type: Resize
+- is_scale: false
+  mean:
+  - 123.675
+  - 116.28
+  - 103.53
+  std:
+  - 58.395
+  - 57.12
+  - 57.375
+  type: NormalizeImage
+- type: Permute
+label_list:
+- A2
+- A3
+- A10
+- A5
+- A11
+- A8
